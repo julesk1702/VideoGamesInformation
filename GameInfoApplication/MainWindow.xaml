@@ -1,74 +1,105 @@
 ﻿<Window x:Class="GameInfoApplication.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Game Info" Height="600" Width="1000"
-        Background="White"
-        WindowStartupLocation="CenterScreen">
+        Title="Game Info" Height="700" Width="1200"
+        Background="#F0F2F5" WindowStartupLocation="CenterScreen"
+        MinHeight="600" MinWidth="1000">
 
-    <Grid Margin="20">
+    <Grid Margin="10">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1.5*" />
-            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="Auto" MinWidth="280"/>
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
         <!-- Sidebar: Game List & Filters -->
-        <Border Grid.Column="0" Background="LightGray" Padding="15" CornerRadius="10">
-            <StackPanel>
-
-                <TextBlock Text="Game Library" FontSize="22" FontWeight="Bold" Foreground="Black" />
+        <Border Grid.Column="0" Background="#1E1E1E" Padding="15" CornerRadius="10" 
+                Margin="0,10,10,10">
+            <StackPanel Height="Auto">
+                <TextBlock Text="Game Library" FontSize="24" FontWeight="Bold" Foreground="White" Margin="0,0,0,15"/>
 
                 <!-- Search Box -->
-                <TextBox x:Name="FilterTextBox"
-                         Width="Auto"
-                         Height="35"
-                         Margin="0,10,0,10"
-                         Padding="5"
-                         FontSize="14"
-                         Background="White"
-                         BorderBrush="Gray"
-                         BorderThickness="1"
-                         Text="Search for a game..." />
+                <TextBox x:Name="FilterTextBox" Height="40" Margin="0,0,0,10" Padding="8"
+                         FontSize="14" Background="#FFF" Foreground="#23272A" 
+                         BorderBrush="#7289DA" BorderThickness="2"
+                         Text="Search..."/>
 
-                <!-- Filter & Load Buttons -->
+                <!-- Store Filter -->
+                <ComboBox x:Name="StoreComboBox" Height="40" FontSize="14" Background="White" Margin="0,0,0,10" SelectionChanged="StoreComboBox_SelectionChanged"/>
+
+                <!-- Buttons -->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
-                    <Button Content="All Games" Click="LoadAllGames_Click"
-                            Width="120" Margin="5" Padding="5"
-                            Background="LightBlue" Foreground="Black" 
-                            BorderBrush="Gray" FontWeight="Bold"/>
-                    <Button Content="Popular Games" Click="LoadPopularGames_Click"
-                            Width="120" Margin="5" Padding="5"
-                            Background="LightGreen" Foreground="Black" 
-                            BorderBrush="Gray" FontWeight="Bold"/>
+                    <Button Content="All Games" Click="LoadAllGames_Click" Width="140" Margin="5" Padding="8"
+                            Background="#5865F2" Foreground="White" BorderBrush="Transparent" FontWeight="Bold"/>
+                    <Button Content="Popular Games" Click="LoadPopularGames_Click" Width="140" Margin="5" Padding="8"
+                            Background="#43B581" Foreground="White" BorderBrush="Transparent" FontWeight="Bold"/>
                 </StackPanel>
 
-                <!-- Game List with Scroll -->
-                <ListBox x:Name="GamesListBox" DisplayMemberPath="Name"
-                         SelectionChanged="GamesListBox_SelectionChanged"
-                         Background="White"
-                         BorderBrush="Gray"
-                         Padding="5"
-                         Height="400"
-                    ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                <!-- Scrollable Game List -->
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Height="Auto" MaxHeight="600">
+                    <ListBox x:Name="GamesListBox" DisplayMemberPath="Name" SelectionChanged="GamesListBox_SelectionChanged"
+                             Background="#2C2F33" Foreground="White" BorderBrush="Transparent"
+                             Padding="5" ScrollViewer.VerticalScrollBarVisibility="Auto"
+                             Style="{DynamicResource ModernListBox}" />
+                </ScrollViewer>
             </StackPanel>
         </Border>
 
         <!-- Main Panel: Game Details -->
-        <Border Grid.Column="1" Background="White" Padding="20" CornerRadius="10" BorderBrush="LightGray" BorderThickness="1">
-            <StackPanel>
+        <Border Grid.Column="1" Background="#FFFFFF" Padding="0" CornerRadius="10" 
+                BorderBrush="#D3D3D3" BorderThickness="1" Margin="10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5*"/>
+                    <!-- Banner takes 40% of the space -->
+                    <RowDefinition Height="0.5*"/>
+                    <!-- Details take the rest -->
+                </Grid.RowDefinitions>
 
-                <TextBlock x:Name="GameNameTextBlock" FontSize="26" FontWeight="Bold" 
-                           Foreground="Black" Margin="0,0,0,10"/>
+                <!-- Game Banner with Title Overlay -->
+                <Grid Grid.Row="0">
+                    <Image x:Name="GameBanner" Stretch="UniformToFill"/>
 
-                <Image x:Name="GameImage" Height="250" Width="400" 
-                       Stretch="UniformToFill" HorizontalAlignment="Center" 
-                       Margin="0,10,0,10"/>
+                    <!-- Dark vignette effect for readability -->
+                    <Rectangle Fill="Black" Opacity="0.5"/>
 
-                <!-- Game Details Section -->
-                <Border Background="#F3F3F3" Padding="15" CornerRadius="8">
-                    <TextBlock x:Name="GameDetailsTextBlock" FontSize="16"
-                               TextWrapping="Wrap" Foreground="Black"/>
-                </Border>
-            </StackPanel>
+                    <!-- Game Title on Banner -->
+                    <TextBlock x:Name="GameNameTextBlock" Text="Select a game"
+                               FontSize="32" FontWeight="Bold"
+                               Foreground="White" 
+                               Margin="20" VerticalAlignment="Top"
+                               HorizontalAlignment="Left"/>
+                </Grid>
+
+                <!-- Game Details (Now with Icons & Styling) -->
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="20">
+                        <!-- Game Stats -->
+                        <StackPanel Orientation="Horizontal" Margin="0,5">
+                            <TextBlock Text="⭐ Rating: " FontWeight="Bold"/>
+                            <TextBlock x:Name="RatingTextBlock"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,5">
+                            <TextBlock Text="📅 Released: " FontWeight="Bold"/>
+                            <TextBlock x:Name="ReleasedTextBlock"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,5">
+                            <TextBlock Text="🎮 Metacritic: " FontWeight="Bold"/>
+                            <TextBlock x:Name="MetacriticTextBlock"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,5">
+                            <TextBlock Text="🔞 ESRB: " FontWeight="Bold"/>
+                            <TextBlock x:Name="EsrbTextBlock"/>
+                        </StackPanel>
+
+                        <!-- Store List with Logos -->
+                        <TextBlock Text="Available in stores:" FontSize="18" FontWeight="Bold" Margin="0,10,0,5"/>
+                        <WrapPanel x:Name="StoreListPanel" HorizontalAlignment="Stretch" Height="Auto" MaxHeight="100" />
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
         </Border>
     </Grid>
 </Window>

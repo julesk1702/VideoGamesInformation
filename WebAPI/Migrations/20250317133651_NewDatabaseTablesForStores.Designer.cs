@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAPI.Data;
 
@@ -10,9 +11,11 @@ using WebAPI.Data;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250317133651_NewDatabaseTablesForStores")]
+    partial class NewDatabaseTablesForStores
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -211,9 +214,6 @@ namespace WebAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("GameDetailsId")
-                        .HasColumnType("int");
-
                     b.Property<int>("GameId")
                         .HasColumnType("int");
 
@@ -225,8 +225,6 @@ namespace WebAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("GameDetailsId");
 
                     b.HasIndex("GameId");
 
@@ -350,6 +348,7 @@ namespace WebAPI.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PK_ID"));
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Domain")
@@ -364,8 +363,9 @@ namespace WebAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ImageBackground")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "image_background");
+                        .HasAnnotation("Relational:JsonPropertyName", "background_image");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -391,10 +391,6 @@ namespace WebAPI.Migrations
 
             modelBuilder.Entity("WebAPI.Models.GameStore", b =>
                 {
-                    b.HasOne("WebAPI.Models.GameDetails", null)
-                        .WithMany("GameStores")
-                        .HasForeignKey("GameDetailsId");
-
                     b.HasOne("WebAPI.Models.Game", "Game")
                         .WithMany("GameStores")
                         .HasForeignKey("GameId")
@@ -460,8 +456,6 @@ namespace WebAPI.Migrations
 
             modelBuilder.Entity("WebAPI.Models.GameDetails", b =>
                 {
-                    b.Navigation("GameStores");
-
                     b.Navigation("MetacriticPlatforms");
 
                     b.Navigation("Platforms");

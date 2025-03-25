@@ -58,6 +58,9 @@ public class GameDetails
     public int? GameSeriesCount { get; set; }
     public EsrbRating? EsrbRating { get; set; }
     public List<PlatformDetails>? Platforms { get; set; }
+
+    // Navigation property for GameStores
+    public ICollection<GameStore> GameStores { get; set; } = new List<GameStore>();
 }
 
 public class MetacriticPlatform

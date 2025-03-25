@@ -15,11 +15,11 @@ public class GameService
         _httpClient = httpClient;
     }
 
-    public async Task<IEnumerable<Game>> GetPopularGamesAsync()
+    public async Task<IEnumerable<GameWithStoreNames>> GetPopularGamesAsync()
     {
         var url = $"{BaseUrl}/games/popular";
         var response = await _httpClient.GetStringAsync(url);
-        var result = JsonSerializer.Deserialize<IEnumerable<Game>>(response, new JsonSerializerOptions
+        var result = JsonSerializer.Deserialize<IEnumerable<GameWithStoreNames>>(response, new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true
         });
@@ -27,15 +27,16 @@ public class GameService
         return result;
     }
 
-    public async Task<IEnumerable<Game>> GetAllGamesAsync()
+    public async Task<StoredGamesResponse> GetAllGamesAsync()
     {
         var url = $"{BaseUrl}/games/stored";
         var response = await _httpClient.GetStringAsync(url);
-        var result = JsonSerializer.Deserialize<IEnumerable<Game>>(response, new JsonSerializerOptions
+        var storedGamesResponse = JsonSerializer.Deserialize<StoredGamesResponse>(response, new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true
         });
-        return result;
+
+        return storedGamesResponse;
     }
 
     public async Task<Game> GetGameDetailsAsync(string name)
@@ -49,4 +50,21 @@ public class GameService
 
         return gameDetails;
     }
+
+    public async Task<IEnumerable<StoreDetails>> GetAllStoresAsync()
+    {
+        var url = $"{BaseUrl}/games/stores";
+        var response = await _httpClient.GetStringAsync(url);
+        var result = JsonSerializer.Deserialize<IEnumerable<StoreDetails>>(response, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        });
+        return result;
+    }
+}
+
+public class StoredGamesResponse
+{
+    public List<GameWithStoreNames> Games { get; set; }
+    public List<StoreDetails> Stores { get; set; }
 }

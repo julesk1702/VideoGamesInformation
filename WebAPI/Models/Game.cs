@@ -21,7 +21,7 @@ namespace WebAPI.Models
         public string? EsrbRating { get; set; }
 
         public List<Platform>? Platforms { get; set; }
-
+        public List<GameStore>? GameStores { get; set; }
         //public List<Ratings> Ratings { get; set; }
     }
 
@@ -48,5 +48,27 @@ namespace WebAPI.Models
 
         public string? Minimum { get; set; }
         public string? Recommended { get; set; }
+    }
+
+    public class GameWithStoreNamesDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public double Rating { get; set; }
+
+        [JsonPropertyName("background_image")]
+        public string BackgroundImage { get; set; }
+
+        public string Released { get; set; }
+        public bool Tba { get; set; }
+        public int? Metacritic { get; set; }
+
+        [JsonPropertyName("esrb_rating")]
+        public string? EsrbRating { get; set; }
+
+        public List<Platform>? Platforms { get; set; } // Simplified Platform details
+
+        [JsonPropertyName("stores")]
+        public List<string>? StoreNames { get; set; } // List of store names only
     }
 }

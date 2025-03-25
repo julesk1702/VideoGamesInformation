@@ -9,8 +9,10 @@ namespace WebAPI.Data
         public DbSet<Platform> Platforms { get; set; }
         public DbSet<Requirements> Requirements { get; set; }
         public DbSet<GameDetails> GameDetails { get; set; }
+        public DbSet<StoreDetails> StoreDetails { get; set; }  // ✅ Toegevoegd
+        public DbSet<GameStore> GameStores { get; set; }  // ✅ Toegevoegd
+        public DbSet<EsrbRating> EsrbRating { get; set; } 
 
-        // Add this constructor to accept DbContextOptions
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -28,6 +30,19 @@ namespace WebAPI.Data
                 .HasOne(p => p.Requirements)
                 .WithOne()
                 .HasForeignKey<Platform>(p => p.RequirementsId);
+
+            // ✅ Relaties voor GameStore en StoreDetails toegevoegd
+            modelBuilder.Entity<GameStore>()
+                .HasOne(gs => gs.Store)
+                .WithMany(s => s.GameStores)
+                .HasForeignKey(gs => gs.StoreId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<GameStore>()
+                .HasOne(gs => gs.Game)
+                .WithMany(g => g.GameStores)
+                .HasForeignKey(gs => gs.GameId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             base.OnModelCreating(modelBuilder);
         }
